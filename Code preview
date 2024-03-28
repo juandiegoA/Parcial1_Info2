@@ -1,0 +1,66 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+class MatrizM {
+private:
+    vector<vector<int>> matriz;
+    int tamano; // Número impar que representa tanto el número de filas como el de columnas.
+
+public:
+    // Constructor que crea una matriz cuadrada NxN con valores por defecto.
+    MatrizM(int n) : tamano(n) {
+        matriz.resize(n, vector<int>(n, 0)); // Inicializa todos los valores a 0.
+    }
+
+    // Función para rellenar la matriz con valores (simplificado para el ejemplo).
+    void rellenarMatriz() {
+        int valor = 1;
+        for (int i = 0; i < tamano; ++i) {
+            for (int j = 0; j < tamano; ++j) {
+                matriz[i][j] = valor++;
+            }
+        }
+    }
+
+    // Simplemente muestra la matriz en consola.
+    void mostrar() const {
+        for (const auto &fila : matriz) {
+            for (int valor : fila) {
+                cout << valor << " ";
+            }
+            cout << "\n";
+        }
+    }
+
+    // Accesor para el elemento central (podría ser útil para la regla K).
+    int elementoCentral() const {
+        return matriz[tamano / 2][tamano / 2];
+    }
+
+    // Aquí podrías añadir más métodos para rotar o cambiar dimensiones según necesites.
+};
+
+int main() {
+    // Ejemplo de creación y uso de la MatrizM.
+    int tamano = 3; // El tamaño debe ser impar.
+    MatrizM matriz1(tamano);
+    MatrizM matriz2(tamano);
+
+    matriz1.rellenarMatriz();
+    matriz2.rellenarMatriz(); // Podrías tener diferentes maneras de rellenarlas.
+
+    cout << "Matriz 1:" << endl;
+    matriz1.mostrar();
+    cout << "\nMatriz 2:" << endl;
+    matriz2.mostrar();
+
+    // Ejemplo simple de cómo podrías aplicar una "regla K".
+    if (matriz1.elementoCentral() + matriz2.elementoCentral() > 10) {
+        cout << "La cerradura se abre." << endl;
+    } else {
+        cout << "La cerradura permanece cerrada." << endl;
+    }
+
+    return 0;
+}
