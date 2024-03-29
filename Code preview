@@ -5,15 +5,13 @@ using namespace std;
 class MatrizM {
 private:
     vector<vector<int>> matriz;
-    int tamano; // Número impar que representa tanto el número de filas como el de columnas.
+    int tamano; // Debe ser impar.
 
 public:
-    // Constructor que crea una matriz cuadrada NxN con valores por defecto.
     MatrizM(int n) : tamano(n) {
-        matriz.resize(n, vector<int>(n, 0)); // Inicializa todos los valores a 0.
+        matriz.resize(n, vector<int>(n, 0));
     }
 
-    // Función para rellenar la matriz con valores (simplificado para el ejemplo).
     void rellenarMatriz() {
         int valor = 1;
         for (int i = 0; i < tamano; ++i) {
@@ -23,9 +21,8 @@ public:
         }
     }
 
-    // Simplemente muestra la matriz en consola.
     void mostrar() const {
-        for (const auto &fila : matriz) {
+        for (const auto& fila : matriz) {
             for (int valor : fila) {
                 cout << valor << " ";
             }
@@ -33,33 +30,54 @@ public:
         }
     }
 
-    // Accesor para el elemento central (podría ser útil para la regla K).
-    int elementoCentral() const {
+    int valorCentral() const {
         return matriz[tamano / 2][tamano / 2];
     }
-
-    // Aquí podrías añadir más métodos para rotar o cambiar dimensiones según necesites.
 };
 
+bool reglaK(const vector<MatrizM>& estructuras, int valorReferencia) {
+    int sumaCentrales = 0;
+    for (const auto& estructura : estructuras) {
+        sumaCentrales += estructura.valorCentral();
+    }
+    return sumaCentrales > valorReferencia;
+}
+
 int main() {
-    // Ejemplo de creación y uso de la MatrizM.
-    int tamano = 3; // El tamaño debe ser impar.
-    MatrizM matriz1(tamano);
-    MatrizM matriz2(tamano);
+    int numEstructuras, tamano, valorReferencia;
+    cout << "Ingrese el número de estructuras M para la cerradura X: ";
+    cin >> numEstructuras;
 
-    matriz1.rellenarMatriz();
-    matriz2.rellenarMatriz(); // Podrías tener diferentes maneras de rellenarlas.
+    vector<MatrizM> cerraduraX;
+    for (int i = 0; i < numEstructuras; ++i) {
+        cout << "Ingrese el tamaño impar para la estructura M #" << (i + 1) << ": ";
+        cin >> tamano;
 
-    cout << "Matriz 1:" << endl;
-    matriz1.mostrar();
-    cout << "\nMatriz 2:" << endl;
-    matriz2.mostrar();
+        // Verificar si el tamaño es impar.
+        if (tamano % 2 == 0) {
+            cout << "El tamaño debe ser impar. Intente de nuevo.\n";
+            --i; // Solicitar nuevamente el tamaño.
+            continue;
+        }
 
-    // Ejemplo simple de cómo podrías aplicar una "regla K".
-    if (matriz1.elementoCentral() + matriz2.elementoCentral() > 10) {
-        cout << "La cerradura se abre." << endl;
+        MatrizM matriz(tamano);
+        matriz.rellenarMatriz();
+        cerraduraX.push_back(matriz);
+    }
+
+    // Mostrar las matrices.
+    for (size_t i = 0; i < cerraduraX.size(); ++i) {
+        cout << "\nMatriz " << (i + 1) << ":" << endl;
+        cerraduraX[i].mostrar();
+    }
+
+    cout << "\nIngrese el valor de referencia para la regla K: ";
+    cin >> valorReferencia;
+
+    if (reglaK(cerraduraX, valorReferencia)) {
+        cout << "\nLa cerradura se puede abrir." << endl;
     } else {
-        cout << "La cerradura permanece cerrada." << endl;
+        cout << "\nLa cerradura permanece cerrada." << endl;
     }
 
     return 0;
