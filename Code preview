@@ -45,18 +45,18 @@ bool reglaK(const vector<MatrizM>& estructuras, int valorReferencia) {
 
 int main() {
     int numEstructuras, tamano, valorReferencia;
-    cout << "Ingrese el número de estructuras M para la cerradura X: ";
-    cin >> numEstructuras;
+    cout << "Ingrese el numero de estructuras M para la cerradura X: ";
+            cin >> numEstructuras;
 
     vector<MatrizM> cerraduraX;
     for (int i = 0; i < numEstructuras; ++i) {
-        cout << "Ingrese el tamaño impar para la estructura M #" << (i + 1) << ": ";
-        cin >> tamano;
+        cout << "Ingrese el tamano impar para la estructura M #" << (i + 1) << ": ";
+                cin >> tamano;
 
         // Verificar si el tamaño es impar.
         if (tamano % 2 == 0) {
-            cout << "El tamaño debe ser impar. Intente de nuevo.\n";
-            --i; // Solicitar nuevamente el tamaño.
+            cout << "El tamano debe ser impar. Intente de nuevo.\n";
+                --i; // Solicitar nuevamente el tamaño.
             continue;
         }
 
