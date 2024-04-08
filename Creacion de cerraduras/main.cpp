@@ -1,7 +1,42 @@
 #include <iostream>
+#include <memory>
+#include <vector>
+#include <algorithm>
 #include<stdlib.h>      // Se importa para poder usar la funcion exit
 
 using namespace std;
+
+// Clase para representar la estructura M
+class StructureM {
+public:
+    StructureM(int size) : size(size) {
+        // Implementación de la creación y manipulación de la matriz
+    }
+
+    void rotate(int dir) {
+        // Implementación de la rotación de la matriz
+    }
+
+    int get_value(int row, int col) {
+        // Implementación para obtener el valor de una celda
+    }
+
+    int get_size() const { return size; }
+
+private:
+    int size;
+    unique_ptr<int[]> matrix;
+};
+
+// Clase para representar la cerradura X
+class LockX {
+public:
+    LockX(const vector<int>& dimensions) {
+        for (int size : dimensions) {
+            structures.emplace_back(size);
+        }
+    }
+
 
 int** matriz (int);
 int** rot_mat (int**, int);
