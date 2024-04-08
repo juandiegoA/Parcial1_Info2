@@ -120,7 +120,7 @@ int** rot_mat (int** M, int dir){
     return MR;
 }
 
-// Creaci髇 de estructuras
+// Creaci贸n de estructuras
 
 int*** cerradura (int n, int t[]){
 
@@ -217,32 +217,95 @@ bool validar_relacion(int cc[], int r, int*** cer, int n, int t[]){
     return res;
 }
 
-// Generaci髇 de cerradura
+// Generaci贸n de cerradura
 
-int* nueva_cerradura(int K[], int t){
-
+int* nueva_cerradura(int K[], int t) {
     int fil = K[0];
     int col = K[1];
 
-    // Instanciacion de cerradura
-    int n = t-1;                        // tamano de la cerradura
+    // Instanciaci贸n de cerradura
+    int n = t - 1;                        // Tama帽o de la cerradura
     int* X = new int[n];
 
-    // Se define el tamano de la primera matriz
-    if(fil < 3 & col < 3)
+    // Se define el tama帽o de la primera matriz
+    if (fil < 3 && col < 3)
         X[0] = 3;
-    else if(fil > col){
-        if(fil%2 == 0)
-            X[0] = fil+1;
+    else if (fil > col) {
+        if (fil % 2 == 0)
+            X[0] = fil + 1;
         else
             X[0] = fil;
     }
-    else{
-        if(col%2 == 0)
-            X[0] = col+1;
+    else {
+        if (col % 2 == 0)
+            X[0] = col + 1;
         else
             X[0] = col;
     }
+
+    // Conversi贸n a coordenadas cartesianas
+    int x = col - int(X[0] / 2) - 1;
+    int y = int(X[0] / 2) - fil + 1;
+
+    int cc[] = { x, y };  // Casillas que se comparar谩n
+
+    // Construcci贸n de cerradura
+    int*** cer = new int**[n];
+
+    cer[0] = matriz(X[0]);
+
+    // Comparamos pares de matrices para validar las relaciones de la regla
+    int j, u;
+    bool cumple;
+
+    for (int i = 0; i < n - 1; i++) {
+        int m = 2;                  // N煤mero de matrices que se comparan
+        int*** cb = new int**[m];
+        cb[0] = cer[i];
+        cb[1] = matriz(X[0]);
+
+        int tb[] = { X[i], X[0] };
+
+        int* v = valores(cc, cb, m, tb);
+
+        j = 0;
+        u = 0;
+        cumple = false;
+
+        while (!cumple) {
+            if (j == 1)
+                cb[1] = rot_mat(cb[1], 1);
+            if (j == 2)
+                cb[1] = rot_mat(cb[1], 1);
+            if (j == 3)
+                cb[1] = rot_mat(cb[1], 1);
+
+            int r = K[i + 2];                             // Relaci贸n a validar
+            cumple = validar_relacion(cc, r, cb, m, tb);
+
+            if (!cumple)
+                j++;
+
+            if (j > 3) {
+                tb[1] = tb[1] + 2;
+                cb[1] = matriz(tb[1]);
+
+                j = 0;
+                u++;
+            }
+
+            if (u == 2 && r == 1) {
+                cout << "No es posible hacer la configuraci贸n." << endl;
+                exit(-1);
+            }
+        }
+
+        cer[i + 1] = cb[1];
+        X[i + 1] = tb[1];
+    }
+
+    return X;
+}
 
     // Conversion a coordenadas cartesianas
     int x = col - int(X[0]/2) - 1;
