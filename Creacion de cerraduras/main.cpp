@@ -1,42 +1,7 @@
 #include <iostream>
-#include <memory>
-#include <vector>
-#include <algorithm>
 #include<stdlib.h>      // Se importa para poder usar la funcion exit
 
 using namespace std;
-
-// Clase para representar la estructura M
-class StructureM {
-public:
-    StructureM(int size) : size(size) {
-        // Implementación de la creación y manipulación de la matriz
-    }
-
-    void rotate(int dir) {
-        // Implementación de la rotación de la matriz
-    }
-
-    int get_value(int row, int col) {
-        // Implementación para obtener el valor de una celda
-    }
-
-    int get_size() const { return size; }
-
-private:
-    int size;
-    unique_ptr<int[]> matrix;
-};
-
-// Clase para representar la cerradura X
-class LockX {
-public:
-    LockX(const vector<int>& dimensions) {
-        for (int size : dimensions) {
-            structures.emplace_back(size);
-        }
-    }
-
 
 int** matriz (int);
 int** rot_mat (int**, int);
@@ -88,7 +53,6 @@ int main()
 
     return 0;
 }
-
 
 // Funcion para creacion de matrices
 
@@ -191,18 +155,41 @@ int* valores(int cc[], int*** c, int n, int t[]){
 
 // Validacion de reglas
 
-bool validate_rule_part(const vector<int>& rule, int index) {
-        // Implementación para validar una parte de la regla K
-        int row = rule[index];
-        int col = rule[index + 1];
-        int structure = index / 3;
-        int value1 = structures[structure].get_value(row, col);
-        int value2 = structures[structure + 1].get_value(rule[index + 2], rule[index + 3]);
-        int cmp = rule[index + 4];
-        if (cmp == -1 && value1 <= value2) return false;
-        if (cmp == 1 && value1 >= value2) return false;
-        return true;
+bool validar_regla(int K[], int*** cer, int n, int t[]){
+
+    bool res = true;
+
+    // Casilla seleccionada de la primera matriz
+    int fil = K[0];
+    int col = K[1];
+
+    // Conversion a coordenadas cartesianas
+    int x = col - int(t[0]/2) - 1;
+    int y = int(t[0]/2) - fil + 1;
+
+    int cc [] = {x,y};
+
+    // Valores alineados en dicha casilla
+    int* v = new int[n];
+    v = valores(cc, cer, n, t);
+
+    // Comparamos cada par de valores adyacentes
+    for (int i=0;i<n-1;i++){
+        int r = K[i+2];         // Relacion a evaluar
+
+        if(r==1 & v[i]>v[i+1])
+            res = res*true;
+        else if(r==0 & v[i]==v[i+1])
+            res = res*true;
+        else if(r==-1 & v[i]<v[i+1])
+            res = res*true;
+        else
+            res = res*false;
     }
+
+    return res;
+}
+
 // Validacion de relaciones
 
 bool validar_relacion(int cc[], int r, int*** cer, int n, int t[]){
@@ -228,16 +215,6 @@ bool validar_relacion(int cc[], int r, int*** cer, int n, int t[]){
 
     return res;
 }
-
-bool validate_rule(const vector<int>& rule) {
-        // Implementación de la validación de la regla K completa
-        for (int i = 0; i < rule.size() - 1; i += 5) {
-            if (!validate_rule_part(rule, i)) {
-                return false;
-            }
-        }
-        return true;
-    }
 
 // Generación de cerradura
 
@@ -316,9 +293,10 @@ int* nueva_cerradura(int K[], int t) {
                 u++;
             }
 
+            // Modificación para detectar cuando no es posible generar una configuración
             if (u == 2 && r == 1) {
-                cout << "No es posible hacer la configuración." << endl;
-                exit(-1);
+                cout << "No es posible hacer la configuración para la regla K dada." << endl;
+                return nullptr;
             }
         }
 
@@ -328,7 +306,6 @@ int* nueva_cerradura(int K[], int t) {
 
     return X;
 }
-
 
 // Codigos prueba
 
